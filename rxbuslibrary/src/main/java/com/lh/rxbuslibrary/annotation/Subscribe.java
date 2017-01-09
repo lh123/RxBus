@@ -1,4 +1,6 @@
-package com.lh.rxbuslibrary;
+package com.lh.rxbuslibrary.annotation;
+
+import com.lh.rxbuslibrary.event.EventThread;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -13,5 +15,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Subscribe {
-    BusSchedulers scheduler() default BusSchedulers.CURRENT;
+    int tag() default 0;
+    EventThread scheduler() default EventThread.CURRENT;
 }

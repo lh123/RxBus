@@ -5,9 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
-import com.lh.rxbuslibrary.BusSchedulers;
 import com.lh.rxbuslibrary.RxBus;
-import com.lh.rxbuslibrary.Subscribe;
+import com.lh.rxbuslibrary.annotation.Subscribe;
+import com.lh.rxbuslibrary.event.EventThread;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        RxBus.getInstance().post("Hello RxBus!");
+                        RxBus.getInstance().post(1,"Hello RxBus!");
                     }
                 }).start();
             }
@@ -29,20 +29,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         RxBus.getInstance().register(this);
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
         RxBus.getInstance().unRegister(this);
     }
 
-
-    @Subscribe(scheduler = BusSchedulers.UI)
-    public void Test(String str){
-        Toast.makeText(getApplicationContext(),str,Toast.LENGTH_SHORT).show();
+    @Subscribe(tag = 1,scheduler = EventThread.UI)
+    public void Test(String msg){
+        Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
     }
 }
